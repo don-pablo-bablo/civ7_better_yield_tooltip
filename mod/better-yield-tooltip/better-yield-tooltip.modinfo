@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- UI only: it changes no rules, yields or definitions. AffectsSavedGames is 0, so it can be
      added to or removed from a game in progress. -->
-<Mod id="better-yield-tooltip" version="1" xmlns="ModInfo">
+<Mod id="better-yield-tooltip" version="1.0.0" xmlns="ModInfo">
 	<Properties>
 		<Name>Better Yield Tooltip</Name>
 		<Description>Breaks a tile's yields down by source - base, adjacency, Great Works, policies, pantheon, appeal - per building. Hover a tile, press K, hover the yield icons.</Description>
