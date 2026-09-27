@@ -6,6 +6,8 @@ The game says a tile makes 9 Science. This mod says why: base tile,
 adjacency, each building's own yield, Great Works, policies, pantheon, civ and
 leader abilities, specialists and appeal, each with its amount.
 
+![Breakdown of a Science quarter: the base tile, then the Academy and Library with their Great Works and a best guess](screenshots/academy-library.jpg)
+
 ## How to use it
 
 1. Hover a tile.
@@ -20,6 +22,10 @@ When the game gives an amount with no source, the mod matches it against your
 bonuses. If one bonus fits exactly, it is named. If several could fit, the line
 is dimmed and lists them, for example "+2 Science from Literature OR
 Philosopher's Circle". Anything left over is shown as **Unattributed**.
+
+![Amphitheater and Monument, each bonus named with its amount](screenshots/amphitheater-monument.jpg)
+
+![Barracks and Blacksmith, with base yield, adjacency and a bonus from Cursus Honorum](screenshots/barracks-blacksmith.jpg)
 
 ## Compatibility
 

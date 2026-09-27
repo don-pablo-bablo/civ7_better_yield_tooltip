@@ -12,6 +12,8 @@ The mod adds a nested tooltip to the plot tooltip.
 | `tools/mock/yield-panel.html` | draws the panel in a browser from saved fixtures |
 | `tools/mock/fixtures.js` | the latest harvest from a game |
 | `tools/mock/fixtures/` | reference sets, one file per game worth keeping, listed in `index.js` |
+| `screenshots/` | in-game shots for the README and the Workshop page |
+| `workshop/description.txt` | the Steam Workshop description, in Steam's BBCode |
 | `reference` | gitignored link to the game's resources folder |
 
 Read the header comment in `byt-yield-tooltip.js` before changing it. The
@@ -117,6 +119,9 @@ not tile yields.
 - Check that the header comments in `byt-yield-tooltip.js` still describe the
   code.
 - Bump `version` in the modinfo.
+- If the README's player-facing text changed, update
+  `workshop/description.txt` to match.
+- Upload only `mod/better-yield-tooltip/`, through the same Workshop item.
 
 ## Known gaps
 
