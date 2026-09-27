@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Yield Breakdown Mock</title>
+
+<!--
+  Draws the real renderer (mod/better-yield-tooltip/ui/byt-yield-panel.js) from fixtures in a
+  browser, so the layout can be checked without starting the game.
+
+  Run `python3 -m http.server 8000` from the repo root, then open
+  http://localhost:8000/tools/mock/yield-panel.html. Opening the file directly does not work:
+  browsers block module imports from file://.
+
+  The renderer, the class names and the game's stylesheet are real. The stylesheet comes from
+  `reference`, a gitignored link to the game's resources folder. The icons are not: the game
+  serves them over its own blp: protocol, so coloured discs stand in. The fonts differ too.
+  Trust it for layout, spacing and hierarchy; check icons in game.
+-->
+
+<link rel="stylesheet" href="../../reference/Base/modules/core/ui/themes/default/default.css">
+<style>
+  /* The game scales rem with resolution; 18px matches the ratios in default.css (32px = 1.778rem). */
+  html { font-size: 18px; }
+  /* default.css sets `body { overflow: hidden; height: 100% }` for the game, which stops this
+     page scrolling. */
+  html, body {
+    overflow: auto !important;
+    height: auto !important;
+    min-height: 100%;
+  }
+  body {
+    margin: 0;
+    padding: 2rem;
+    background: #1b2129 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='8' height='8' fill='%231b2129'/%3E%3Ccircle cx='2' cy='2' r='1' fill='%23222a33'/%3E%3C/svg%3E");
+    color: #f2f2f2;
+    font-family: system-ui, sans-serif;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  /* Stand-ins for the two blp: sprites the frame uses. */
+  .mock-frame {
+    background: #12161c;
+    border: 1px solid #4a525c;
+    border-radius: 2px;
+    padding: 1rem;
+    max-width: 28rem;
+    box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.6);
+  }
+  /* The Great Work slot frame is a blp: sprite set inline, so only !important can replace it. */
+  [style*="base_empty-slot"] {
+    border-image: none !important;
+    border: 1px solid #4a525c !important;
+    border-radius: 2px;
+    background-color: #191e25;
+  }
+  .mock-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #8d97a6; margin-bottom: 0.5rem; }
+  /* Fallback fonts, since the game's are not installed. */
+  .font-title { font-family: Georgia, "Times New Roman", serif; }
+  .font-body { font-family: system-ui, sans-serif; }
+  .text-gradient-secondary { color: #e8d9a8; }
+  .text-accent-2 { color: #c7ccd4; }
+  .text-accent-3 { color: #8d97a6; }
+</style>
+</head>
+<body>
+  <!-- Panels harvested from the game go here, ahead of the hand-written ones below. -->
+  <div id="fromgame" style="display:contents"></div>
+  <div>
+    <div class="mock-label">Made up: a filled Great Work slot</div>
+    <div class="mock-frame" id="greatworks"></div>
+  </div>
+
+<script type="module">
+import { bytPanel } from "../../mod/better-yield-tooltip/ui/byt-yield-panel.js";
+// Panels harvested from the game's UI.log. Empty until a harvest.
+import { FIXTURES } from "./fixtures.js";
+// Reference sets from earlier games, kept for comparison (tools/mock/fixtures/index.js).
+import { SETS } from "./fixtures/index.js";
+
+// A coloured disc per yield, standing in for the game's blp: icon.
+const disc = (color, letter) =>
+  `url("data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='11' fill='${color}'/>` +
+    `<text x='12' y='16' font-size='12' font-family='sans-serif' text-anchor='middle' fill='#10141a'>${letter}</text></svg>`
+  )}")`;
+
+const FOOD = disc("#6CC24A", "F");
+const PROD = disc("#D2691E", "P");
+const GOLD = disc("#E6BE3C", "G");
+const SCIENCE = disc("#3C9BE8", "S");
+const CULTURE = disc("#B547C7", "C");
+const HAPPY = disc("#E0A93C", "H");
+const DIPLO = disc("#7f97b3", "D");
+const BUILDING = disc("#8d97a6", "B");
+// Stands in for a Great Work's own image (GreatWorks.Image).
+const CODEX = disc("#c9b27a", "\u25A4");
+// Stand-ins for the source icons: civ symbol, leader portrait, policy card and pantheon.
+const CIV = disc("#9a6b3f", "\u16A0");
+const LEADER = disc("#7f97b3", "\u265F");
+const POLICY = disc("#c9b27a", "\u2726");
+const PANTHEON = disc("#b07fc7", "\u269D");
+// The Base Tile row has no icon in game either.
+const TILE = null;
+
+const part = (amount, term, kind) => ({ amount, term, kind });
+
+// The one made-up case: a building with a Great Work in a slot, which no harvest has yet. The
+// numbers are illustrative.
+const greatworks = {
+  groups: [
+    { name: "Base Tile", isPlot: true, icon: TILE,
+      yields: [{ icon: SCIENCE, name: "Science", total: 1, parts: [], gap: 0 }] },
+    { name: "Library", icon: BUILDING,
+      yields: [
+        { icon: SCIENCE, name: "Science", total: 7, type: "YIELD_SCIENCE",
+          parts: [part(2, "Base Yield", "base"), part(1, "Adjacency", "adjacency"),
+                  part(4, "Great Works", "greatWorks")], gap: 0 },
+      ],
+      slots: [{ name: "Codex", image: CODEX }, { empty: true }] },
+  ],
+};
+
+const draw = (id, data) => {
+  const el = document.getElementById(id);
+  for (const node of bytPanel(data)) el.appendChild(node);
+};
+
+// ---------------------------------------------------------------------------------------------
+// Harvested panels carry the game's icon paths, which a browser cannot load. Each is read for
+// what it is and replaced with a lettered disc.
+const YIELD_DISCS = {
+  YIELD_FOOD: FOOD, YIELD_PRODUCTION: PROD, YIELD_GOLD: GOLD, YIELD_SCIENCE: SCIENCE,
+  YIELD_CULTURE: CULTURE, YIELD_HAPPINESS: HAPPY, YIELD_DIPLOMACY: DIPLO,
+};
+const UNKNOWN = disc("#5a6470", "?");
+
+const sourceDisc = (css) => {
+  if (!css) return null;
+  const name = String(css);
+  if (name.includes("icon_tradition")) return disc("#c9b27a", "\u2617");
+  if (name.includes("icon_policy")) return POLICY;
+  if (name.includes("civ_sym")) return CIV;
+  if (name.includes("pantheon") || name.includes("pant_")) return PANTHEON;
+  if (name.includes("lead")) return LEADER;
+  if (name.includes("restype_")) return disc("#7fb069", "\u2766");        // resource class (leaf)
+  if (name.includes("resicon_")) return disc("#d98c5f", name.match(/resicon_([a-z])/)[1].toUpperCase());
+  if (name.includes("bonustype_")) return disc("#4D7C96", "\u2691");      // city-state bonus
+  if (name.includes("ntf_choosenarrative")) return disc("#b99a6a", "\u2710"); // story event
+  if (name.includes("victory_")) return disc("#ac088e", "\u2605");        // legacy
+  if (name.includes("att_")) return disc("#6c8cbf", "\u25C6");            // leader attribute
+  if (name.includes("wondericon_")) return disc("#c9a227", "W");            // a wonder's own icon
+  if (name.includes("buildicon_") || name.includes("BUILDING")) return BUILDING;
+  return UNKNOWN;
+};
+const sourceDiscs = (list) => (list ? list.map(sourceDisc) : null);
+
+const mockify = (fixture) => ({
+  ...fixture,
+  groups: (fixture.groups || []).map((group) => ({
+    ...group,
+    icon: group.isPlot ? null : (group.icon ? BUILDING : null),
+    slots: (group.slots || []).map((slot) => ({ ...slot, image: slot.empty ? null : CODEX })),
+    specialists: group.specialists ? {
+      ...group.specialists,
+      icon: disc("#8aa0b8", "\u263A"),
+      yields: (group.specialists.yields || []).map((y) => ({ ...y, icon: YIELD_DISCS[y.type] || UNKNOWN })),
+    } : null,
+    yields: (group.yields || []).map((y) => {
+      const yieldDisc = YIELD_DISCS[y.type] || UNKNOWN;
+      return {
+        ...y,
+        icon: yieldDisc,
+        parts: (y.parts || []).map((part) => ({
+          ...part, sourceIcon: sourceDisc(part.sourceIcon), sourceIcons: sourceDiscs(part.sourceIcons),
+          candidates: part.candidates
+            ? part.candidates.map((c) => ({ ...c, icons: sourceDiscs(c.icons) })) : part.candidates,
+        })),
+        abilities: (y.abilities || []).map((a) => ({
+          ...a, icon: yieldDisc, sourceIcon: sourceDisc(a.sourceIcon), sourceIcons: sourceDiscs(a.sourceIcons),
+        })),
+      };
+    }),
+  })),
+});
+
+// One panel per tile. A tile opened three times is logged three times; keep the last reading, in
+// the place the tile first appeared.
+const latestPerTile = (fixtures) => {
+  const byTile = new Map();
+  for (const fixture of fixtures) {
+    const loc = fixture.loc || {};
+    const key = `${fixture.cityName}|${loc.x},${loc.y}`;
+    byTile.set(key, fixture);   // an existing key keeps its place in a Map, so order is first-seen
+  }
+  return [...byTile.values()];
+};
+
+const fromGame = document.getElementById("fromgame");
+// A heading across the whole width, so each set's panels sit under its name.
+const heading = (text) => {
+  const el = document.createElement("div");
+  el.className = "mock-label";
+  el.style.flexBasis = "100%";
+  el.style.fontSize = "0.9rem";
+  el.style.color = "#e8d9a8";
+  el.style.marginTop = "1rem";
+  el.textContent = text;
+  fromGame.appendChild(el);
+};
+const drawSet = (fixtures) => {
+  for (const fixture of latestPerTile(fixtures)) {
+    const column = document.createElement("div");
+    const label = document.createElement("div");
+    label.className = "mock-label";
+    label.textContent = fixture.label;
+    const frame = document.createElement("div");
+    frame.className = "mock-frame";
+    for (const node of bytPanel(mockify(fixture))) frame.appendChild(node);
+    column.appendChild(label);
+    column.appendChild(frame);
+    fromGame.appendChild(column);
+  }
+};
+if (FIXTURES.length) { heading("Latest harvest (tools/mock/fixtures.js)"); drawSet(FIXTURES); }
+for (const set of SETS) { heading(set.name); drawSet(set.fixtures); }
+heading("Made up");
+draw("greatworks", greatworks);
+
+</script>
+</body>
+</html>

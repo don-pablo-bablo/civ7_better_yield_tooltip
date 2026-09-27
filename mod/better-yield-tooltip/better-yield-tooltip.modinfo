@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- UI only: it changes no rules, yields or definitions. AffectsSavedGames is 0, so it can be
+     added to or removed from a game in progress. -->
+<Mod id="better-yield-tooltip" version="1" xmlns="ModInfo">
+	<Properties>
+		<Name>Better Yield Tooltip</Name>
+		<Description>Breaks a tile's yields down by source - base, adjacency, Great Works, policies, pantheon, appeal - per building. Hover a tile, press K, hover the yield icons.</Description>
+		<Authors>Pablo</Authors>
+		<AffectsSavedGames>0</AffectsSavedGames>
+		<Package>Mod</Package>
+	</Properties>
+	<Dependencies>
+		<Mod id="base-standard" title="LOC_MODULE_BASE_STANDARD_NAME"/>
+	</Dependencies>
+	<ActionCriteria>
+		<Criteria id="always">
+			<AlwaysMet/>
+		</Criteria>
+	</ActionCriteria>
+	<ActionGroups>
+		<ActionGroup id="better-yield-tooltip-ui" scope="game" criteria="always">
+			<Actions>
+				<UIScripts>
+					<!-- Rendering for the tooltip below. The tooltip imports it; it is listed
+					     here too so the game is sure to serve it, since a failed import would
+					     disable the tooltip. -->
+					<Item>ui/byt-yield-panel.js</Item>
+					<!-- The breakdown tooltip, added to the plot tooltip's yield bar through
+					     ComponentRegistry. Its imports are relative (../../core/...), so it must
+					     stay one folder below the mod root. -->
+					<Item>ui/byt-yield-tooltip.js</Item>
+				</UIScripts>
+			</Actions>
+		</ActionGroup>
+	</ActionGroups>
+</Mod>
