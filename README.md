@@ -10,9 +10,17 @@ leader abilities, specialists and appeal, each with its amount.
 
 ## How to use it
 
+With a mouse:
+
 1. Hover a tile.
 2. Press **K** to lock the tooltip.
 3. Hover the row of yield icons at the bottom of the tooltip.
+
+With a controller:
+
+1. Move the cursor over a tile.
+2. Click the left stick to lock the tooltip.
+3. Press left or right on the d-pad until the breakdown opens.
 
 The breakdown opens beside it: the tile first, then each building on it. Every
 number comes from the game. The mod only works out which source each one

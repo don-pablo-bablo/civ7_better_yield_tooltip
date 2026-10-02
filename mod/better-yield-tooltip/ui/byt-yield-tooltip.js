@@ -5,6 +5,9 @@
 // Escape closes it. The breakdown has no child tooltips, so it shows no Inspect line and cannot
 // itself be locked.
 //
+// On a controller: click the left stick to lock the plot tooltip, then press left or right on the
+// d-pad until the yield row is selected. Up and down do not move between items in a tooltip.
+//
 // Why it hangs off YieldBar. A tooltip only nests if it is built inside the parent's Solid
 // TooltipContext: the child registers itself in the parent's childTooltipList on mount
 // (core/ui-next/components/tooltip.tsx), and the model will not stack anything outside that list
@@ -32,6 +35,7 @@ import {
 } from "../../core/ui-next/components/tooltip.js";
 import { TooltipModel } from "../../core/ui-next/components/tooltip-model.js";
 import { ComponentRegistry } from "../../core/ui-next/services/component-registry.js";
+import { isFocusable } from "../../core/ui-next/services/focus.js";
 import { PlotCursor } from "../../core/ui/input/plot-cursor.js";
 // Rendering lives in its own engine-free module so the mock page can draw it in a browser.
 import { bytPanel, bytInfoBadge, bytMessage, bytNum, BYT_PANEL_BUILD }
@@ -39,7 +43,7 @@ import { bytPanel, bytInfoBadge, bytMessage, bytNum, BYT_PANEL_BUILD }
 
 // Build stamp. Bump it on every edit. Scripts load at game start, so an edit takes effect only
 // after a restart; the stamp in UI.log shows which version is running.
-const BYT_BUILD = "byt-14 24 Sep";
+const BYT_BUILD = "byt-16 2 Oct";
 
 function bytt(line) {
   try { console.error(`[BYT] yield-tooltip: ${line}`); } catch (e) { /* nothing to do */ }
@@ -1563,6 +1567,12 @@ const BYTYieldBarWithBreakdown = (props) => {
               } catch (e) { /* a badge a little too far right is not worth losing the panel */ }
               wrap.appendChild(bar);
               wrap.appendChild(bytInfoBadge());
+              // Selectable, so a controller can reach it: once the plot tooltip is locked (left
+              // stick), the d-pad moves between selectable parts and selecting one opens its
+              // tooltip. The game marks its own status icons in the plot tooltip the same way
+              // (plot-tooltip.tsx). The mouse does not need it.
+              try { isFocusable(wrap, () => [true, undefined]); }
+              catch (e) { bytt(`could not make the yield row selectable: ${e}`); }
               return wrap;
             },
           }),

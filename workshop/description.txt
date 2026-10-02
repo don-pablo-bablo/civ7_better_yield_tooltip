@@ -1,10 +1,18 @@
 Shows where each of a tile's yields comes from: base tile, adjacency, buildings, Great Works, policies, pantheon, civ and leader abilities, specialists and appeal.
 
 [h2]How to use it[/h2]
+With a mouse:
 [olist]
 [*]Hover a tile.
 [*]Press [b]K[/b] to lock the tooltip.
 [*]Hover the yield icons at the bottom of the tooltip.
+[/olist]
+
+With a controller:
+[olist]
+[*]Move the cursor over a tile.
+[*]Click the left stick to lock the tooltip.
+[*]Press left or right on the d-pad until the breakdown opens.
 [/olist]
 
 A panel opens with the tile's sources, then each building's.
