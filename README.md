@@ -42,6 +42,11 @@ Philosopher's Circle". Anything left over is shown as **Unattributed**.
 - It works by replacing the tooltip's yield bar. Another mod that replaces the
   yield bar will clash with it, and only one of them will show.
 
+## AI use
+
+The code and docs for this mod were written with AI, using Claude Code. The
+mod is tested by playing the game.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

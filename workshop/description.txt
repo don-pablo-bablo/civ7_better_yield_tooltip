@@ -25,5 +25,8 @@ Some amounts reach the tooltip without a source. The mod names the bonus that ma
 [*]It replaces the tooltip's yield bar, so it clashes with any other mod that does the same.
 [/list]
 
+[h2]AI use[/h2]
+The code and docs for this mod were written with AI, using Claude Code. The mod is tested by playing the game.
+
 [h2]Source and bug reports[/h2]
 The code is on [url=https://github.com/don-pablo-bablo/civ7_better_yield_tooltip]GitHub[/url] under the MIT licence. Report bugs there.
