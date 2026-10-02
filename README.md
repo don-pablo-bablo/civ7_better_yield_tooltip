@@ -35,6 +35,8 @@ Philosopher's Circle". Anything left over is shown as **Unattributed**.
 
 ![Barracks and Blacksmith, with base yield, adjacency and a bonus from Cursus Honorum](screenshots/barracks-blacksmith.jpg)
 
+![A Han Great Wall, a civ's unique improvement, with its own Culture as base yield](screenshots/great-wall.jpg)
+
 ## Compatibility
 
 - The mod only changes the interface. You can add it to a game in progress or
