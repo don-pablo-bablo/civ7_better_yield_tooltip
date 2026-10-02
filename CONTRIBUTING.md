@@ -41,23 +41,26 @@ italic font.
 
 ## Fixtures
 
-The fixtures were captured from real games with a development tool we use that
-has not been released publicly yet. Until it is, you can view the saved games
-in the mock but not capture new ones.
+The fixtures are captured from real games with
+[civ7lab](https://github.com/don-pablo-bablo/civ7lab).
 
-For reference, this is how capture works. With `BYT_DUMP_FIXTURES` on, the
-tooltip writes each breakdown it opens to UI.log as a record tagged
-`[C7LAB]`, the tool's format. Long records are split into chunks so they
-survive UI.log's line limit. To write one for every tile you own, run this in
-the game's UI debug console:
+With `BYT_DUMP_FIXTURES` on, the tooltip writes each breakdown it opens to
+UI.log as a record tagged `[C7LAB]`, civ7lab's format. Long records are split
+into chunks so they survive UI.log's line limit. To write one for every tile
+you own, run this with the game open:
 
-```js
-window.dispatchEvent(new CustomEvent('byt-export-all'))
+```bash
+civ7lab live eval "window.dispatchEvent(new CustomEvent('byt-export-all'))"
 ```
 
 It logs `[BYT] yield-tooltip: export-all: N fixture(s) ...` when done. UI.log
-is emptied at every launch, so collect it before relaunching. The tool then
-turns the records into `tools/mock/fixtures.js`.
+is emptied at every launch, so turn the records into fixtures before
+relaunching:
+
+```bash
+civ7lab mock fixtures --kind byt-fixture --latest-by cityName,loc.x,loc.y \
+  --out tools/mock/fixtures.js
+```
 
 `fixtures/antiquity-augustus.js` is a late Antiquity Rome game: 236 yield rows
 over 5 settlements, none Unattributed, 6 guesses.
