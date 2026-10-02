@@ -72,6 +72,10 @@
     <div class="mock-label">Made up: a filled Great Work slot</div>
     <div class="mock-frame" id="greatworks"></div>
   </div>
+  <div>
+    <div class="mock-label">Copied by hand: a Han Great Wall</div>
+    <div class="mock-frame" id="greatwall"></div>
+  </div>
 
 <script type="module">
 import { bytPanel } from "../../mod/better-yield-tooltip/ui/byt-yield-panel.js";
@@ -228,6 +232,26 @@ if (FIXTURES.length) { heading("Latest harvest (tools/mock/fixtures.js)"); drawS
 for (const set of SETS) { heading(set.name); drawSet(set.fixtures); }
 heading("Made up");
 draw("greatworks", greatworks);
+
+// A civ's unique improvement, which no harvest has yet: a Great Wall copied by hand from a Han
+// game, turn 10, tile (20,35). The game names every source but the Culture, which is the wall's
+// own +2 (Constructible_YieldChanges).
+const bonus = (label, value) => ({ label, value, kind: "bonus" });
+const greatWall = {
+  groups: [
+    { name: "Great Wall", icon: BUILDING,
+      yields: [
+        { icon: FOOD, name: "Food", total: 1, parts: [bonus("Natural Yield", 1)], gap: 0 },
+        { icon: PROD, name: "Production", total: 2,
+          parts: [part(1, "Base Yield", "base"), part(1, "Warehouse", "warehouse")], gap: 0 },
+        { icon: GOLD, name: "Gold", total: 3,
+          parts: [part(1, "Base Yield", "base"), bonus("Additions", 2)], gap: 0 },
+        { icon: CULTURE, name: "Culture", total: 2, parts: [part(2, "Base Yield", "base")], gap: 0 },
+        { icon: HAPPY, name: "Happiness", total: 1, parts: [bonus("Appeal Bonus", 1)], gap: 0 },
+      ] },
+  ],
+};
+draw("greatwall", greatWall);
 
 </script>
 </body>

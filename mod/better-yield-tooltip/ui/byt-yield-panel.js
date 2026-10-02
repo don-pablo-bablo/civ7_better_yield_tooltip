@@ -32,7 +32,7 @@
 
 // Build stamp. Bump it on every edit. The tooltip logs it at load beside its own, since this module
 // also runs in a browser and logs nothing itself.
-export const BYT_PANEL_BUILD = "panel-10 24 Sep";
+export const BYT_PANEL_BUILD = "panel-12 2 Oct";
 
 // 15 rather than 15.0, but 2.5 kept.
 export function bytNum(v) {
@@ -80,9 +80,8 @@ export function bytParts(yieldEntry) {
   // A breakdown that is only "Unattributed" says nothing the pill does not, so draw nothing.
   if (!parts.length) return [];
   if (yieldEntry.gap) parts.push({ amount: yieldEntry.gap, term: "Unattributed", kind: "gap" });
-  // The same goes for a lone "Base Yield" that is the whole total. Any other single part is worth
-  // showing: it answers where the yield comes from.
-  if (parts.length === 1 && !yieldEntry.gap && parts[0].kind === "base") return [];
+  // A lone "Base Yield" is still drawn. Hidden, it left amounts in the totals with no line under
+  // them: a Great Wall's own +2 Culture looked unsupported.
   return parts;
 }
 
