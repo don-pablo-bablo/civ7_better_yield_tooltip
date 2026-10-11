@@ -3,7 +3,7 @@
      added to or removed from a game in progress. -->
 <Mod id="better-yield-tooltip" version="1.0.2" xmlns="ModInfo">
 	<Properties>
-		<Name>Better Yield Tooltip</Name>
+		<Name>Pablo's Better Yield Tooltip</Name>
 		<Description>Breaks a tile's yields down by source - base, adjacency, Great Works, policies, pantheon, appeal - per building. Hover a tile, press K, hover the yield icons. On a controller, click the left stick, then press left or right on the d-pad.</Description>
 		<Authors>Pablo</Authors>
 		<AffectsSavedGames>0</AffectsSavedGames>

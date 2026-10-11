@@ -1,4 +1,4 @@
-# Better Yield Tooltip
+# Pablo's Better Yield Tooltip
 
 A Civilization VII mod that shows where a tile's yields come from.
 
